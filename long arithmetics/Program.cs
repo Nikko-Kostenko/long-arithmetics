@@ -10,22 +10,6 @@ namespace long_arithmetics
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("enter num A:");
-            string numberA = Console.ReadLine();
-                Arithmetics A = new Arithmetics(numberA);
-            Console.WriteLine();
-            Console.WriteLine("enter num B:");
-            string numberB = Console.ReadLine();
-            Arithmetics B = new Arithmetics(numberB);
-            
-              
-
-            
-            Arithmetics ans = A % B;
-            
-            ans.Write();
-
-            Console.WriteLine();
             
         }
         
@@ -343,6 +327,89 @@ namespace long_arithmetics
                 return ans;
             }
 
+            public static Arithmetics PlusMod(Arithmetics a, Arithmetics b, Arithmetics c)
+            {
+                a = Arithmetics.DivModLong(a, c, false);
+                b = Arithmetics.DivModLong(b, c, false);
+                a = a + b;
+                return Arithmetics.DivModLong(a, c, false);
+            }
+
+            public static Arithmetics MinusMod(Arithmetics a, Arithmetics b, Arithmetics c)
+            {
+                a = Arithmetics.DivModLong(a, c, false);
+                b = Arithmetics.DivModLong(b, c, false);
+                a = a - b;
+                return Arithmetics.DivModLong(a, c, false);
+            }
+
+            public static Arithmetics MultMod(Arithmetics a, Arithmetics b, Arithmetics c)
+            {
+                a = Arithmetics.DivModLong(a, c, false);
+                b = Arithmetics.DivModLong(b, c, false);
+                a = a * b;
+                return Arithmetics.DivModLong(a, c, false);
+            }
+
+            public static Arithmetics PowMod(Arithmetics a, int b, Arithmetics c)
+            {
+                a = Arithmetics.DivModLong(a, c, false);
+                a = Arithmetics.Pow(a, b);
+                return Arithmetics.DivModLong(a, c, false);
+            }
+
+            private static void inputModSys(ref int x, ref List<Arithmetics> C,ref List<Arithmetics> M)
+            {
+                Console.WriteLine("Type the number of relations");
+                int num = Convert.ToInt32(Console.ReadLine());
+                x = num > 1 ? num : 0;
+                Console.WriteLine();
+                for(int i = 1; i <= x; i++)
+                {
+                    Console.WriteLine("type valuse of C" + i + " and M" + i);
+                    C.Add(new Arithmetics(Console.ReadLine()));
+                    M.Add(new Arithmetics(Console.ReadLine()));
+                    Console.WriteLine();
+                }
+            }
+
+            private static Arithmetics exeModSys( int x,  List<Arithmetics> C,  List<Arithmetics> M)
+            {
+                Arithmetics sum = new Arithmetics();
+                Arithmetics D = new Arithmetics();
+                List < Arithmetics > Mi= new List<Arithmetics>();
+                List<Arithmetics> Im = new List<Arithmetics>();
+                D.setNum(1, 0);
+                foreach (var m in M)
+                {
+                    D = D * m;
+                }
+                for(int i = 0; i < x; i ++)
+                {
+                    Arithmetics temp = D / M[i];
+                    Mi.Add(temp);
+                    temp = Mi[i] % M[i];
+                    Im.Add(temp);
+                }
+                for (int i = 0; i < x; i++)
+                {
+                    sum += C[i] * Mi[i] * Im[i];
+                }
+                sum = DivModLong(sum, D, false);
+                return sum;
+
+            }
+
+            public static Arithmetics ModSys()
+            {
+                int X = 0;
+                List<Arithmetics> C = new List<Arithmetics>();
+                List<Arithmetics> M = new List<Arithmetics>();
+                inputModSys(ref X, ref C, ref M);
+                Arithmetics ans = exeModSys( X, C, M);
+                return ans;
+            }
+
             private static int Compare(Arithmetics a, Arithmetics b)
            {
                return CompareSign(a, b);
@@ -429,8 +496,7 @@ namespace long_arithmetics
 
            public static Arithmetics operator %(Arithmetics a, Arithmetics b) => DivModLong(a, b, false);
 
-  
-
+        
         }
     }
 }
